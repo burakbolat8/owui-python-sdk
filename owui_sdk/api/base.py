@@ -16,9 +16,9 @@ class BaseAPI:
         self.client = client
         self.endpoint = ""
     
-    def _get(self, path: str = "", params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def _get(self, path: str = "", params: Optional[Dict[str, Any]] = None, raw: bool = False) -> Any:
         """Make a GET request to the endpoint."""
-        return self.client.get(f"{self.endpoint}{path}", params=params)
+        return self.client.get(f"{self.endpoint}{path}", params=params, raw=raw)
     
     def _post(
         self,

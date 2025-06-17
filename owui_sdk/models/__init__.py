@@ -4,6 +4,16 @@ from .memory import Memory, MemoryCreate, MemoryUpdate
 from .function import Function, FunctionCreate, FunctionUpdate
 from .tool import Tool, ToolCreate, ToolUpdate
 from .user import User, UserCreate, UserUpdate, Permission, Group
+from .knowledge import Knowledge
+from .models import Model
+from .pipeline import Pipeline
+from .task import Task
+from .image import Image
+from .audio import Audio
+from .retrieval import Retrieval
+from .config import Config
+from .auth import Auth
+from .channel import Channel
 
 __all__ = [
     'Message',
@@ -24,5 +34,16 @@ __all__ = [
     'UserCreate',
     'UserUpdate',
     'Permission',
-    'Group'
+    'Group',
+    'Knowledge',
+    'Model',
+    'Pipeline',
+    'Task',
+    'Image',
+    'Audio',
+    'Retrieval',
+    'Config',
+    'Auth',
+    'Channel',
+    'Chat'
 ] 

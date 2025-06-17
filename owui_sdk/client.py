@@ -93,7 +93,8 @@ class OpenWebUI:
         json: Optional[Dict[str, Any]] = None,
         data: Optional[Dict[str, Any]] = None,
         files: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        raw: bool = False,
+    ) -> Any:
         """
         Make a request to the API.
         
@@ -104,9 +105,10 @@ class OpenWebUI:
             json: JSON body
             data: Form data
             files: Files to upload
+            raw: If True, return raw response content (bytes)
             
         Returns:
-            API response as dictionary
+            API response as dictionary or raw bytes
             
         Raises:
             APIError: If the request fails
@@ -124,6 +126,8 @@ class OpenWebUI:
                 timeout=self.timeout,
             )
             response.raise_for_status()
+            if raw:
+                return response.content
             return response.json()
         except requests.exceptions.HTTPError as e:
             if e.response.status_code == 401:
@@ -132,9 +136,9 @@ class OpenWebUI:
         except requests.exceptions.RequestException as e:
             raise APIError(f"Request failed: {str(e)}")
     
-    def get(self, endpoint: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def get(self, endpoint: str, params: Optional[Dict[str, Any]] = None, raw: bool = False) -> Any:
         """Make a GET request."""
-        return self.request("GET", endpoint, params=params)
+        return self.request("GET", endpoint, params=params, raw=raw)
     
     def post(
         self,

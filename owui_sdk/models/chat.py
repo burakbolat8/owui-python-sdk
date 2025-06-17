@@ -29,4 +29,11 @@ class ChatCompletionResponse(BaseModel):
     created: int = Field(..., description="Unix timestamp of creation")
     model: str = Field(..., description="Model used for completion")
     choices: List[Dict[str, Any]] = Field(..., description="Completion choices")
-    usage: Optional[Dict[str, int]] = Field(None, description="Token usage statistics") 
+    usage: Optional[Dict[str, int]] = Field(None, description="Token usage statistics")
+
+class Chat(BaseModel):
+    id: str = Field(..., description="Unique identifier for the chat")
+    title: Optional[str] = Field(None, description="Title of the chat")
+    user_id: Optional[str] = Field(None, description="User ID associated with the chat")
+    created_at: Optional[int] = Field(None, description="Creation timestamp (epoch)")
+    updated_at: Optional[int] = Field(None, description="Last update timestamp (epoch)") 

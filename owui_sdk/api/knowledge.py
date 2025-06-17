@@ -1,5 +1,6 @@
 from typing import Optional, Dict, Any, List
 from .base import BaseAPI
+from ..models import Knowledge
 
 class KnowledgeAPI(BaseAPI):
     """API endpoints for knowledge base operations."""
@@ -8,31 +9,36 @@ class KnowledgeAPI(BaseAPI):
         super().__init__(client)
         self.endpoint = "/api/v1/knowledge"
 
-    def get_all(self) -> List[Dict[str, Any]]:
+    def get_all(self) -> List[Knowledge]:
         """Get all knowledge bases."""
-        return self._get("/list")
+        data = self._get("/list")
+        return [Knowledge(**kb) for kb in data]
 
-    def get(self) -> List[Dict[str, Any]]:
+    def get(self) -> List[Knowledge]:
         """Get knowledge (current user)."""
-        return self._get("")
+        data = self._get("")
+        return [Knowledge(**kb) for kb in data]
 
-    def create(self, name: str, description: str, data: Optional[Dict[str, Any]] = None, access_control: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def create(self, name: str, description: str, data: Optional[Dict[str, Any]] = None, access_control: Optional[Dict[str, Any]] = None) -> Knowledge:
         """Create a new knowledge base."""
         payload = {"name": name, "description": description, "data": data, "access_control": access_control}
-        return self._post("/create", json=payload)
+        result = self._post("/create", json=payload)
+        return Knowledge(**result)
 
     def reindex(self) -> Dict[str, Any]:
         """Reindex all knowledge files."""
         return self._post("/reindex")
 
-    def get_by_id(self, knowledge_id: str) -> Dict[str, Any]:
+    def get_by_id(self, knowledge_id: str) -> Knowledge:
         """Get knowledge by ID."""
-        return self._get(f"/{knowledge_id}")
+        data = self._get(f"/{knowledge_id}")
+        return Knowledge(**data)
 
-    def update(self, knowledge_id: str, name: Optional[str] = None, description: Optional[str] = None, data: Optional[Dict[str, Any]] = None, access_control: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def update(self, knowledge_id: str, name: Optional[str] = None, description: Optional[str] = None, data: Optional[Dict[str, Any]] = None, access_control: Optional[Dict[str, Any]] = None) -> Knowledge:
         """Update knowledge by ID."""
         payload = {"name": name, "description": description, "data": data, "access_control": access_control}
-        return self._post(f"/{knowledge_id}/update", json=payload)
+        result = self._post(f"/{knowledge_id}/update", json=payload)
+        return Knowledge(**result)
 
     def add_file(self, knowledge_id: str, file_id: str) -> Dict[str, Any]:
         """Add a file to knowledge by ID."""
