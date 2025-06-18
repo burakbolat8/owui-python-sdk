@@ -1,11 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "owui-sdk"
 version = "0.1.0"
-description = "Add your description here"
+description = "Python SDK for Open WebUI API"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "Burak Bolat", email = "burakbolat08@gmail.com"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "pydantic>=2.11.7",
-    "pytest>=8.4.0",
     "requests>=2.32.4",
+    "python-dotenv>=1.0.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/burakbolat8/owui-sdk"
+Repository = "https://github.com/burakbolat8/owui-sdk.git"
+
+[tool.setuptools]
+packages = ["owui_sdk"]

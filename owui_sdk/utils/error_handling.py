@@ -1,3 +1,5 @@
+"""Error handling utilities for the SDK."""
+import json
 from typing import Any, Dict, Optional
 from requests import Response
 from ..exceptions import (
@@ -13,60 +15,44 @@ def handle_api_error(response: Response) -> None:
     Handle API error responses.
     
     Args:
-        response: API response object
+        response: The response object from the API
         
     Raises:
-        APIError: Base API error
-        AuthenticationError: Authentication error
-        ValidationError: Validation error
-        RateLimitError: Rate limit error
-        ResourceNotFoundError: Resource not found error
+        APIError: With appropriate error message from the response
     """
-    if response.status_code == 401:
-        raise AuthenticationError(
-            "Authentication failed",
-            response.status_code,
-            response
-        )
+    try:
+        error_data = response.json()
+        error_message = error_data.get('error', response.text)
+    except (json.JSONDecodeError, AttributeError):
+        error_message = response.text
     
-    if response.status_code == 403:
-        raise AuthenticationError(
-            "Insufficient permissions",
-            response.status_code,
-            response
-        )
-    
-    if response.status_code == 404:
-        raise ResourceNotFoundError(
-            "Resource not found",
-            response.status_code,
-            response
-        )
-    
-    if response.status_code == 422:
-        raise ValidationError(
-            "Invalid request data",
-            response.status_code,
-            response
-        )
-    
-    if response.status_code == 429:
-        raise RateLimitError(
-            "Rate limit exceeded",
-            response.status_code,
-            response
-        )
-    
-    if response.status_code >= 400:
-        error_data = response.json() if response.content else {}
-        error_message = error_data.get("message", "Unknown API error")
-        raise APIError(
-            error_message,
-            response.status_code,
-            response
-        )
+    raise APIError(f"{error_message} (Status code: {response.status_code})")
 
-def handle_validation_error(error: Any) -> Dict[str, Any]:
+def handle_request_error(error: Exception) -> None:
+    """
+    Handle request-related errors.
+    
+    Args:
+        error: The exception that occurred
+        
+    Raises:
+        APIError: With appropriate error message
+    """
+    raise APIError(f"Request failed: {str(error)}")
+
+def handle_validation_error(error: Exception) -> None:
+    """
+    Handle validation errors.
+    
+    Args:
+        error: The validation exception that occurred
+        
+    Raises:
+        APIError: With appropriate error message
+    """
+    raise APIError(f"Validation failed: {str(error)}")
+
+def handle_validation_error_formatted(error: Any) -> Dict[str, Any]:
     """
     Handle validation errors and format them for API responses.
     

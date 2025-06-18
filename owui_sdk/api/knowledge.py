@@ -19,11 +19,32 @@ class KnowledgeAPI(BaseAPI):
         data = self._get("")
         return [Knowledge(**kb) for kb in data]
 
-    def create(self, name: str, description: str, data: Optional[Dict[str, Any]] = None, access_control: Optional[Dict[str, Any]] = None) -> Knowledge:
-        """Create a new knowledge base."""
-        payload = {"name": name, "description": description, "data": data, "access_control": access_control}
-        result = self._post("/create", json=payload)
-        return Knowledge(**result)
+    def get_by_name(self, name: str) -> Knowledge:
+        """
+        Get a knowledge base by its name.
+        
+        Args:
+            name: The name of the knowledge base
+            
+        Returns:
+            The knowledge base
+        """
+        data = self._get(f"/name/{name}")
+        return Knowledge(**data)
+
+    def create(self, name: str, description: Optional[str] = None) -> Knowledge:
+        """
+        Create a new knowledge base.
+        
+        Args:
+            name: The name of the knowledge base
+            description: Optional description
+            
+        Returns:
+            The created knowledge base
+        """
+        data = self._post("", json={"name": name, "description": description})
+        return Knowledge(**data)
 
     def reindex(self) -> Dict[str, Any]:
         """Reindex all knowledge files."""
@@ -55,9 +76,17 @@ class KnowledgeAPI(BaseAPI):
         payload = {"file_id": file_id}
         return self._post(f"/{knowledge_id}/file/remove", json=payload)
 
-    def delete(self, knowledge_id: str) -> Dict[str, Any]:
-        """Delete knowledge by ID."""
-        return self._delete(f"/{knowledge_id}/delete")
+    def delete(self, kb_id: str) -> dict:
+        """
+        Delete a knowledge base.
+        
+        Args:
+            kb_id: The ID of the knowledge base to delete
+            
+        Returns:
+            The response data
+        """
+        return self._delete(f"/{kb_id}")
 
     def reset(self, knowledge_id: str) -> Dict[str, Any]:
         """Reset knowledge by ID."""
