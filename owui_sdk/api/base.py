@@ -21,17 +21,11 @@ class BaseAPI:
     
     def _get(self, path: str = "", params: Optional[Dict[str, Any]] = None) -> Any:
         """Make a GET request to the API."""
-        response = self.client.session.get(f"{self.endpoint}{path}", params=params)
-        if response.status_code >= 400:
-            handle_api_error(response)
-        return response.json()
+        return self.client.get(f"{self.endpoint}{path}", params=params)
     
     def _get_raw(self, path: str = "", params: Optional[Dict[str, Any]] = None) -> bytes:
         """Make a GET request and return raw bytes."""
-        response = self.client.session.get(f"{self.endpoint}{path}", params=params)
-        if response.status_code >= 400:
-            handle_api_error(response)
-        return response.content
+        return self.client.get(f"{self.endpoint}{path}", params=params, raw=True)
     
     def _post(
         self,
@@ -41,10 +35,7 @@ class BaseAPI:
         files: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """Make a POST request to the endpoint."""
-        response = self.client.post(f"{self.endpoint}{path}", json=json, data=data, files=files)
-        if response.status_code >= 400:
-            handle_api_error(response)
-        return response.json()
+        return self.client.post(f"{self.endpoint}{path}", json=json, data=data, files=files)
     
     def _put(
         self,
@@ -53,14 +44,8 @@ class BaseAPI:
         data: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """Make a PUT request to the endpoint."""
-        response = self.client.put(f"{self.endpoint}{path}", json=json, data=data)
-        if response.status_code >= 400:
-            handle_api_error(response)
-        return response.json()
+        return self.client.put(f"{self.endpoint}{path}", json=json, data=data)
     
     def _delete(self, path: str = "", params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Make a DELETE request to the endpoint."""
-        response = self.client.delete(f"{self.endpoint}{path}", params=params)
-        if response.status_code >= 400:
-            handle_api_error(response)
-        return response.json() 
+        return self.client.delete(f"{self.endpoint}{path}", params=params) 

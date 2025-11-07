@@ -29,7 +29,7 @@ try:
         # Download file as bytes
         print(f"Downloading file {file_id} ...")
         raw_bytes = client.files.download_file(file_id)
-        content_base64 = client.files.download_file("file_id", return_base64=True)
+        content_base64 = client.files.download_file(file_id, return_base64=True)
         print(f"Downloaded {len(raw_bytes)} bytes for {file_id}")
 
         # Get original filename from file metadata
